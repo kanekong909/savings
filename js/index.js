@@ -6,6 +6,12 @@ let filtroMes = null;
 let ordenarPor = 'fecha'; // o 'valor'
 let ordenAscendente = true;
 
+// SUPABASE
+const supabaseUrl = 'https://yntcwdxbosigqbkmugmm.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludGN3ZHhib3NpZ3Fia211Z21tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwMDA4NTQsImV4cCI6MjA2NTU3Njg1NH0.tKrxpjf2z1mkRnhPJzjHChL_nfuToKwqX_h3SbRKx20';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+
 function cargarDesdeLocalStorage() {
     const datos = localStorage.getItem('registrosAhorro');
     if (datos) {
@@ -333,6 +339,98 @@ function cerrarModalDuplicados() {
     document.getElementById('modal-duplicados').classList.remove('show');
 }
 
+// CODIGO SUPABASE
+async function cargarDesdeSupabase() {
+  const { data, error } = await supabase.from('registros').select('*').order('fecha');
+  if (error) console.error(error);
+  else registros = data;
+  renderTabla();
+}
+
+async function guardarEnSupabase(valor, fecha) {
+  const { data, error } = await supabase.from('registros').insert([{ valor, fecha }]);
+  if (error) {
+    console.error('Error al guardar:', error);
+  } else {
+    registros.push(data[0]);
+    renderTabla();
+  }
+}
+
+async function cargarDesdeSupabase() {
+    const { data, error } = await supabase
+        .from('registros')
+        .select('*')
+        .order('fecha', { ascending: true });
+
+    if (error) {
+        console.error("Error al cargar registros:", error);
+        return;
+    }
+
+    registros = data;
+    renderTabla();
+}
+
+async function guardarEnSupabase(valor, fecha) {
+    const { data, error } = await supabase
+        .from('registros')
+        .insert([{ valor: parseInt(valor), fecha }]);
+
+    if (error) {
+        console.error("Error al guardar registro:", error);
+        return;
+    }
+
+    registros.push(data[0]); // Añadir el nuevo registro al arreglo local
+    renderTabla();
+}
+
+async function guardarFila() {
+    const inputValor = document.getElementById('input-valor');
+    const inputFecha = document.getElementById('input-fecha');
+
+    if (!inputValor || !inputFecha) return;
+
+    const valor = inputValor.value.trim();
+    const fecha = inputFecha.value;
+
+    if (valor === '' || fecha === '') {
+        mostrarModalAlerta("Por favor completa ambos campos.");
+        return;
+    }
+
+    // Validar fecha duplicada
+    const duplicada = registros.some(r => r.fecha === fecha);
+    if (duplicada) {
+        mostrarFechasDuplicadas();
+        return;
+    }
+
+    // Eliminar fila de edición
+    registros = registros.filter(r => !r.editando);
+
+    // Guardar en Supabase
+    await guardarEnSupabase(valor, fecha);
+}
+
+async function eliminarFila(index) {
+    const id = registros[index].id;
+
+    const { error } = await supabase
+        .from('registros')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error al eliminar:', error);
+        return;
+    }
+
+    registros.splice(index, 1);
+    renderTabla();
+}
+
 // Inicial
-cargarDesdeLocalStorage();
+cargarDesdeSupabase();
 renderTabla();
