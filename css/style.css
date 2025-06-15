@@ -1,0 +1,439 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Knewave&display=swap');
+
+:root {
+    --inconsolata: 'Inconsolata', monospace;
+    --knewave: 'Knewave', cursive;
+    --flex: display: flex;
+    --flex-align: flex-start;
+    --flex-justify: center;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #2B2727;
+}
+
+/* Barra de navegación * */
+nav {
+    background-image: url('/img/fondo.png'); /* tu imagen con forma decorativa */
+    background-size: cover;     /* o 'contain' si prefieres que se ajuste */
+    background-repeat: no-repeat;
+    background-position: center top;
+
+    width: 100%;
+    height: 180px; /* o el alto exacto de tu imagen */
+    padding: 20px 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: self-start;
+    gap: 15px;
+    color: white;
+    /* background-color: lightblue; */
+}
+nav h1 {
+    font-family: var(--knewave);
+    font-size: 40px;
+    color: #f0f0f0;
+    margin-top: 5px;
+}
+nav img {
+    width: 100px;
+    height: 100px;
+    transform: scaleX(-1);
+}
+
+/* Div Tabla */
+.div-tabla {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola columna, pero puedes adaptar */
+    gap: 20px;
+    padding: 25px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.div-tabla h2 {
+    margin: 0;
+    font-size: 24px;
+    text-align: start;
+    font-family: var(--inconsolata);
+    color: #b0b0b0;
+    font-weight: normal;
+}
+/* Tabla */
+#table-container {
+    background-color: #1E1E1E;
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: 8px;
+    min-height: 150px;
+    text-align: center;
+}
+#table-container th {
+    font-size: 20px; 
+    font-weight: bold;
+    background-color: #4e4e4e;
+}
+table {
+    width: 100%;
+    table-layout: fixed; /* ← Forzar distribución fija */
+    border-collapse: collapse;
+    color: rgb(205, 202, 202);
+    margin-top: 20px;
+}
+th, td {
+    width: 50%; /* ← Cada columna ocupará el 50% */
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid rgb(157, 66, 66); /* 👈 Aquí están las rayas blancas */
+    text-align: center;
+    font-family: var(--inconsolata);
+}
+tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05); /* suave "rayado" */
+}
+tr.fade-in {
+    animation: fadeInRow 0.3s ease;
+}
+input[type="number"],
+input[type="date"] {
+    width: 90%;
+    height: 25px;
+    font-size: 14px;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+.input-animado {
+    animation: expandInput 0.2s ease;
+}
+#no-data {
+    text-align: center;
+    color: #777;
+    margin-top: 10px;
+}
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #444;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.buttons button:hover {
+    background-color: #666;
+}
+
+/* Div Filtrar */
+.filter {
+    width: 100%;
+    /* background-color: lightblue; */
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    padding: 0 20px;
+}
+.filter span {
+    font-family: var(--inconsolata);
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: bold;
+}
+.filtros-fecha {
+    display: flex;
+    flex-direction: column;
+    /* background-color: lightblue; */
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+.filtros-fecha label {
+  font-weight: bold;
+  font-family: var(--inconsolata);
+  color: white;
+  margin-bottom: 5px;
+}
+#filtro-desde,
+#filtro-hasta {
+    background-color: #342d2d;
+    color: #dadada;
+    padding: 0 10px;
+    margin-top: 5px;
+    height: 30px;
+}
+select {
+    padding: 5px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #342d2d;
+    color: #f0f0f0;
+    font-size: 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-family: var(--inconsolata);
+}
+select:focus {
+    border-color: #00bcd4;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.4);
+}
+.filtros-fecha .btns-filtrar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.filtros-fecha .btns-filtrar button,
+#btn-guardar, 
+#btn-cancelar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: rgb(66, 66, 66);
+    border: none;
+    font-family: var(--inconsolata);
+    color: #fff;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 8px;
+}
+#btn-cancelar {
+    background-color: #c0392b; /* Rojo */
+}
+.filtros-fecha .btns-filtrar button img {
+    width: 20px;
+}
+#filtro-mes {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #342d2d;
+    color: #dadada;
+    transition: all 0.2s ease-in-out;
+}
+#filtro-mes:hover {
+    border-color: #888;
+    background-color: #f0f0f0;
+}
+#filtro-mes:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Boton agregar */
+.add-fila {
+    background-color: #1E1E1E;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 10px 15px;
+    font-family: var(--inconsolata);
+    font-size: 25px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+}
+.add-fila img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+/* Boton eliminar */
+.btn-eliminar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: red;
+}
+
+/* Modal confirmacion */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease forwards;
+}
+.modal.show {
+  display: flex;
+}
+.modal-content {
+  background: rgb(70, 68, 68);
+  padding: 25px 30px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 280px;
+  transform: scale(0.8);
+  opacity: 0;
+  animation: popIn 0.3s ease forwards;
+}
+.modal-content p {
+  font-family: var(--inconsolata);
+  color: #f0f0f0;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.modal-actions {
+  margin-top: 20px;
+}
+.modal-actions button {
+  margin: 0 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+.modal-actions button:first-child {
+  background-color: #e74c3c;
+  color: white;
+}
+.modal-actions button:last-child {
+  background-color: #ccc;
+}
+.modal-actions button:hover {
+  opacity: 0.85;
+}
+
+/* Modal Duplicados */
+.modal-duplicados {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* fondo semitransparente */
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+.modal-duplicados.show {
+  display: flex;
+}
+.modal-content-duplicados .close {
+  font-size: 28px;
+  padding: 5px 0;
+  font-weight: bold;
+  color: #938484;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.modal-content-duplicados {
+  background-color: rgb(47, 47, 47);
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+}
+.modal-content-duplicados h3 {
+  font-family: var(--inconsolata);
+  color: #c4c4c4;
+  margin-bottom: 15px;
+  text-wrap: wrap;
+  font-size: 18px;
+}
+.modal-content-duplicados ul {
+    list-style-type: none;
+    margin: 0;
+}
+.modal-content-duplicados ul li {
+    color: #e5e5e5;
+    font-family: var(--inconsolata);
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Contenedor total */
+#total-container {
+    position: fixed;
+    bottom: 13%;
+    right: -300px; /* inicia fuera de la vista */
+    color: rgb(46, 45, 45);
+    background-color: #90933a;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    font-size: 16px;
+    transition: right 0.5s ease-in-out;
+    z-index: 999;
+    font-family: var(--inconsolata);
+}
+/* Cuando tiene la clase visible, entra en pantalla */
+#total-container.visible {
+    right: 20px;
+}
+.numero-total {
+    font-weight: bold;
+    color: #1e1e1e;
+    font-size: 1.2em;
+}
+
+
+/* Animaciones */
+/* Añadir una celda */
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Editar una celda */
+@keyframes expandInput {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Modal */
+@keyframes fadeIn {
+  from { background-color: rgba(0, 0, 0, 0); }
+  to { background-color: rgba(0, 0, 0, 0.5); }
+}
+
+/* Modal */
+@keyframes popIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+

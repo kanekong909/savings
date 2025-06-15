@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings</title>
+    <!-- Boxicons -->
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Style -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="modo-oscuro">
+    <!-- Barra de navegacion -->
+    <nav>
+        <h1>SAVINGS</h1>
+        <img src="/img/piggy.svg" alt="">
+    </nav>
+
+    <!-- Filtrar -->
+    <div class="filter">
+        <span>Filtrar</span>
+    </div>
+
+    <div class="filtros-fecha">
+        <label>Desde: <input type="date" id="filtro-desde"></label>
+        <label>Hasta: <input type="date" id="filtro-hasta"></label>
+        <label>Mes: <input type="month" id="filtro-mes"></label>
+
+         <!-- NUEVO: Ordenamiento -->
+        <label>Ordenar por:
+            <select id="ordenar-por" onchange="cambiarOrden()">
+                <option value="fecha">Fecha</option>
+                <option value="valor">Valor</option>
+            </select>
+        </label>
+
+        <label>Tipo de orden:
+            <select id="tipo-orden" onchange="cambiarOrden()">
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+        </label>
+
+        <div class="btns-filtrar">
+            <button onclick="aplicarFiltro()">
+                <img src="/img/filter.svg" alt="Filtrar">
+                Filtrar
+            </button>
+            <button onclick="limpiarFiltro()">
+                <img src="/img/clean.svg" alt="Limpiar">
+                Limpiar
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="div-tabla">
+        <h2>Ahorros</h2>
+
+        <div id="table-container">
+            <p id="no-data">No Data Yet</p>
+        </div>
+
+        <button class="add-fila" onclick="agregarFila()" id="btn-agregar">
+            <img src="/img/plus.svg" alt="Agregar fila">
+            Agregar
+        </button>
+        <button id="btn-guardar" onclick="guardarFila()" style="display: none;">Guardar</button>
+        <button id="btn-cancelar" onclick="cancelarFila()" style="display: none;">Cancelar</button>
+    </div>
+
+    <div id="total-container" style="margin-top: 10px; font-weight: bold;"></div>
+
+    <!-- Modal confirmacion -->
+    <div id="modal-confirm" class="modal">
+        <div class="modal-content">
+            <p>¿Seguro que quieres eliminar este registro?</p>
+            <div class="modal-actions">
+            <button id="btn-confirm-delete">Eliminar</button>
+            <button onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Alerta -->
+    <div id="modal-alerta" class="modal">
+        <div class="modal-content">
+            <p id="mensaje-modal">Este es un mensaje de alerta.</p>
+            <div class="modal-actions">
+                <button onclick="cerrarModalAlerta()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-duplicados" class="modal-duplicados">
+        <div class="modal-content-duplicados">
+            <span class="close" onclick="cerrarModalDuplicados()">&times;</span>
+            <h3>Fechas duplicadas detectadas:</h3>
+            <ul id="lista-fechas-duplicadas"></ul>
+        </div>
+    </div>
+
+    <script src="/js/index.js"></script>
+</body>
+</html>
