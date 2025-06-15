@@ -9,7 +9,7 @@ let ordenAscendente = true;
 // SUPABASE
 const supabaseUrl = 'https://yntcwdxbosigqbkmugmm.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludGN3ZHhib3NpZ3Fia211Z21tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwMDA4NTQsImV4cCI6MjA2NTU3Njg1NH0.tKrxpjf2z1mkRnhPJzjHChL_nfuToKwqX_h3SbRKx20';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 
 function cargarDesdeLocalStorage() {
