@@ -396,7 +396,6 @@ select:focus {
     font-size: 1.2em;
 }
 
-
 /* Animaciones */
 /* Añadir una celda */
 @keyframes fadeInRow {
