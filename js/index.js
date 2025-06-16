@@ -282,22 +282,29 @@ function cancelarFila() {
     renderTabla();
 }
 
-function eliminarFila(index) {
-    indexAEliminar = index;
-    const modal = document.getElementById('modal-confirm');
-    modal.classList.add('show');
-}
-
 function cerrarModal() {
     const modal = document.getElementById('modal-confirm');
     modal.classList.remove('show');
     indexAEliminar = null;
 }
 
-document.getElementById('btn-confirm-delete').addEventListener('click', () => {
+// Boton confirmar eliminar
+document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
     if (indexAEliminar !== null) {
+        const id = registros[indexAEliminar].id;
+
+        const { error } = await supabase
+            .from('registros')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('❌ Error al eliminar en Supabase:', error);
+            mostrarModalAlerta("Error al eliminar en Supabase.");
+            return;
+        }
+
         registros.splice(indexAEliminar, 1);
-        guardarEnLocalStorage();
         renderTabla();
         cerrarModal();
     }
@@ -439,22 +446,10 @@ async function guardarFila() {
     await guardarEnSupabase(valor, fecha);
 }
 
-async function eliminarFila(index) {
-  const id = registros[index].id;
-
-  const { error } = await supabase
-    .from('registros')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('❌ Error al eliminar en Supabase:', error);
-    mostrarModalAlerta("Error al eliminar en Supabase.");
-    return;
-  }
-
-  registros.splice(index, 1);
-  renderTabla();
+function eliminarFila(index) {
+    indexAEliminar = index;
+    const modal = document.getElementById('modal-confirm');
+    modal.classList.add('show');
 }
 
 async function cargarDesdeSupabase() {
