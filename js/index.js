@@ -411,11 +411,13 @@ async function eliminarFila(index) {
 async function cargarDesdeSupabase() {
   try {
     const { data, error } = await 
-        console.log("DATA:", data);
-        console.log("ERROR:", error);supabase
+        supabase
         .from('registros')
         .select('*')
         .order('fecha', { ascending: true });
+
+        console.log("DATA:", data);
+        console.log("ERROR:", error);
 
         if (error) {
         console.error("❌ Error al cargar desde Supabase:", error);
