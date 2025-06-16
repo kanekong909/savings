@@ -349,14 +349,25 @@ async function cargarDesdeSupabase() {
 }
 
 async function guardarEnSupabase(valor, fecha) {
-    const { data, error } = await supabase.from('registros').insert([{ valor, fecha }]);
-    if (error || !data || !data[0]) {
-    console.error('Error al guardar en Supabase:', error);
-    mostrarModalAlerta("Error al guardar en Supabase.");
-    return;
-    }
-    registros.push(data[0]);
+  try {
+    const { data, error } = await supabase
+      .from('registros')
+      .insert([{ valor, fecha }])
+      .select(); // Asegura que te devuelva el objeto insertado
 
+    if (error || !data || data.length === 0) {
+      console.error('Error al guardar:', error || 'No se recibió data');
+      mostrarModalAlerta("Error al guardar en Supabase.");
+      return;
+    }
+
+    registros.push(data[0]);
+    renderTabla();
+
+  } catch (e) {
+    console.error('Excepción al guardar:', e);
+    mostrarModalAlerta("Error inesperado al guardar en Supabase.");
+  }
 }
 
 async function guardarFila() {
@@ -404,8 +415,38 @@ async function eliminarFila(index) {
     renderTabla();
 }
 
+async function cargarDesdeSupabase() {
+  try {
+    const { data, error } = await supabase
+      .from('registros')
+      .select('*')
+      .order('fecha', { ascending: true });
+
+    if (error) {
+      console.error("❌ Error al cargar desde Supabase:", error);
+      mostrarModalAlerta("Error al cargar datos desde Supabase.");
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      console.warn("⚠️ No se encontraron registros en Supabase.");
+      registros = []; // Vacía si no hay nada
+    } else {
+      registros = data;
+    }
+
+    renderTabla();
+
+  } catch (e) {
+    console.error("🚨 Excepción al cargar desde Supabase:", e);
+    mostrarModalAlerta("Error inesperado al cargar los datos.");
+  }
+}
+
+
 // Inicial
 // cargarDesdeLocalStorage();
+cargarDesdeSupabase();
 cargarDesdeSupabase();
 
 // Asegura que supabase esté disponible
