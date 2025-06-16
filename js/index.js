@@ -137,41 +137,41 @@ function agregarFila() {
     renderTabla();
 }
 
-function guardarFila() {
-    const inputValor = document.getElementById('input-valor');
-    const inputFecha = document.getElementById('input-fecha');
+// function guardarFila() {
+//     const inputValor = document.getElementById('input-valor');
+//     const inputFecha = document.getElementById('input-fecha');
 
-    if (!inputValor || !inputFecha) return;
+//     if (!inputValor || !inputFecha) return;
 
-    const valor = inputValor.value.trim();
-    const fecha = inputFecha.value;
+//     const valor = inputValor.value.trim();
+//     const fecha = inputFecha.value;
 
-    if (valor === '' || fecha === '') {
-        mostrarModalAlerta("Por favor completa ambos campos.");
-        return;
-    }
+//     if (valor === '' || fecha === '') {
+//         mostrarModalAlerta("Por favor completa ambos campos.");
+//         return;
+//     }
 
-    // Verificar si ya existe un registro con esa fecha
-    const fechaYaExiste = registros.some(r => r.fecha === fecha);
-    if (fechaYaExiste) {
-        mostrarModalAlerta("Ya existe un registro con esa fecha.");
-        return; // No agregues el registro
-    }
+//     // Verificar si ya existe un registro con esa fecha
+//     const fechaYaExiste = registros.some(r => r.fecha === fecha);
+//     if (fechaYaExiste) {
+//         mostrarModalAlerta("Ya existe un registro con esa fecha.");
+//         return; // No agregues el registro
+//     }
 
-    // Quitar la fila de edición
-    registros = registros.filter(r => !r.editando);
+//     // Quitar la fila de edición
+//     registros = registros.filter(r => !r.editando);
 
-    // Agregar el nuevo registro
-    registros.push({ valor: valor, fecha: fecha });
-    guardarEnLocalStorage();
+//     // Agregar el nuevo registro
+//     registros.push({ valor: valor, fecha: fecha });
+//     guardarEnLocalStorage();
 
-    // Limpia filtros antes de renderizar
-    filtroDesde = null;
-    filtroHasta = null;
-    filtroMes = null;
+//     // Limpia filtros antes de renderizar
+//     filtroDesde = null;
+//     filtroHasta = null;
+//     filtroMes = null;
 
-    renderTabla();
-}
+//     renderTabla();
+// }
 
 function editarCelda(index, campo, celda) {
     const valorActual = registros[index][campo];
@@ -341,12 +341,12 @@ function cerrarModalDuplicados() {
 }
 
 // CODIGO SUPABASE
-async function cargarDesdeSupabase() {
-  const { data, error } = await supabase.from('registros').select('*').order('fecha');
-  if (error) console.error(error);
-  else registros = data;
-  renderTabla();
-}
+// async function cargarDesdeSupabase() {
+//   const { data, error } = await supabase.from('registros').select('*').order('fecha');
+//   if (error) console.error(error);
+//   else registros = data;
+//   renderTabla();
+// }
 
 async function guardarEnSupabase(valor, fecha) {
   const { data, error } = await supabase.from('registros').insert([{ valor, fecha }]);
@@ -358,42 +358,20 @@ async function guardarEnSupabase(valor, fecha) {
   }
 }
 
-async function cargarDesdeSupabase() {
-    const { data, error } = await supabase
-        .from('registros')
-        .select('*')
-        .order('fecha', { ascending: true });
+// async function cargarDesdeSupabase() {
+//     const { data, error } = await supabase
+//         .from('registros')
+//         .select('*')
+//         .order('fecha', { ascending: true });
 
-    if (error) {
-        console.error("Error al cargar registros:", error);
-        return;
-    }
+//     if (error) {
+//         console.error("Error al cargar registros:", error);
+//         return;
+//     }
 
-    registros = data;
-    renderTabla();
-}
-
-async function guardarEnSupabase(valor, fecha) {
-    const { data, error } = await supabase
-        .from('registros')
-        .insert([{ valor: parseInt(valor), fecha }])
-        .select(); // 👈 asegúrate de incluir esto
-
-    if (error) {
-        console.error("Error al guardar registro:", error);
-        return;
-    }
-
-    if (data && data.length > 0) {
-        registros.push(data[0]); // Solo si hay datos
-    } else {
-        console.warn("No se devolvieron datos después del insert.");
-        // Opcional: puedes hacer un reload completo desde Supabase si lo prefieres:
-        await cargarDesdeSupabase();
-    }
-
-    renderTabla();
-}
+//     registros = data;
+//     renderTabla();
+// }
 
 async function guardarFila() {
     const inputValor = document.getElementById('input-valor');
@@ -441,5 +419,5 @@ async function eliminarFila(index) {
 }
 
 // Inicial
+// cargarDesdeLocalStorage();
 cargarDesdeSupabase();
-renderTabla();
