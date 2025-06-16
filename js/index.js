@@ -341,13 +341,6 @@ function cerrarModalDuplicados() {
 }
 
 // CODIGO SUPABASE
-async function cargarDesdeSupabase() {
-  const { data, error } = await supabase.from('registros').select('*').order('fecha');
-  if (error) console.error(error);
-  else registros = data;
-  renderTabla();
-}
-
 async function guardarEnSupabase(valor, fecha) {
   try {
     const { data, error } = await supabase
@@ -417,36 +410,36 @@ async function eliminarFila(index) {
 
 async function cargarDesdeSupabase() {
   try {
-    const { data, error } = await supabase
-      .from('registros')
-      .select('*')
-      .order('fecha', { ascending: true });
+    const { data, error } = await 
+        console.log("DATA:", data);
+        console.log("ERROR:", error);supabase
+        .from('registros')
+        .select('*')
+        .order('fecha', { ascending: true });
 
-    if (error) {
-      console.error("❌ Error al cargar desde Supabase:", error);
-      mostrarModalAlerta("Error al cargar datos desde Supabase.");
-      return;
-    }
+        if (error) {
+        console.error("❌ Error al cargar desde Supabase:", error);
+        mostrarModalAlerta("Error al cargar datos desde Supabase.");
+        return;
+        }
 
-    if (!data || data.length === 0) {
-      console.warn("⚠️ No se encontraron registros en Supabase.");
-      registros = []; // Vacía si no hay nada
-    } else {
-      registros = data;
-    }
+        if (!data || data.length === 0) {
+        console.warn("⚠️ No se encontraron registros en Supabase.");
+        registros = []; // Vacía si no hay nada
+        } else {
+        registros = data;
+        }
 
-    renderTabla();
+        renderTabla();
 
   } catch (e) {
-    console.error("🚨 Excepción al cargar desde Supabase:", e);
-    mostrarModalAlerta("Error inesperado al cargar los datos.");
+        console.error("🚨 Excepción al cargar desde Supabase:", e);
+        mostrarModalAlerta("Error inesperado al cargar los datos.");
   }
 }
 
-
 // Inicial
 // cargarDesdeLocalStorage();
-cargarDesdeSupabase();
 cargarDesdeSupabase();
 
 // Asegura que supabase esté disponible
