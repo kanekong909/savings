@@ -341,37 +341,23 @@ function cerrarModalDuplicados() {
 }
 
 // CODIGO SUPABASE
-// async function cargarDesdeSupabase() {
-//   const { data, error } = await supabase.from('registros').select('*').order('fecha');
-//   if (error) console.error(error);
-//   else registros = data;
-//   renderTabla();
-// }
-
-async function guardarEnSupabase(valor, fecha) {
-  const { data, error } = await supabase.from('registros').insert([{ valor, fecha }]);
-  if (error) {
-    console.error('Error al guardar:', error);
-  } else {
-    registros.push(data[0]);
-    renderTabla();
-  }
+async function cargarDesdeSupabase() {
+  const { data, error } = await supabase.from('registros').select('*').order('fecha');
+  if (error) console.error(error);
+  else registros = data;
+  renderTabla();
 }
 
-// async function cargarDesdeSupabase() {
-//     const { data, error } = await supabase
-//         .from('registros')
-//         .select('*')
-//         .order('fecha', { ascending: true });
+async function guardarEnSupabase(valor, fecha) {
+    const { data, error } = await supabase.from('registros').insert([{ valor, fecha }]);
+    if (error || !data || !data[0]) {
+    console.error('Error al guardar en Supabase:', error);
+    mostrarModalAlerta("Error al guardar en Supabase.");
+    return;
+    }
+    registros.push(data[0]);
 
-//     if (error) {
-//         console.error("Error al cargar registros:", error);
-//         return;
-//     }
-
-//     registros = data;
-//     renderTabla();
-// }
+}
 
 async function guardarFila() {
     const inputValor = document.getElementById('input-valor');
@@ -421,3 +407,12 @@ async function eliminarFila(index) {
 // Inicial
 // cargarDesdeLocalStorage();
 cargarDesdeSupabase();
+
+// Asegura que supabase esté disponible
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof cargarDesdeSupabase === 'function') {
+        cargarDesdeSupabase();
+    } else {
+        console.error("❌ cargarDesdeSupabase no está definida.");
+    }
+});
