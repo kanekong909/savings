@@ -137,47 +137,13 @@ function agregarFila() {
     renderTabla();
 }
 
-// function guardarFila() {
-//     const inputValor = document.getElementById('input-valor');
-//     const inputFecha = document.getElementById('input-fecha');
-
-//     if (!inputValor || !inputFecha) return;
-
-//     const valor = inputValor.value.trim();
-//     const fecha = inputFecha.value;
-
-//     if (valor === '' || fecha === '') {
-//         mostrarModalAlerta("Por favor completa ambos campos.");
-//         return;
-//     }
-
-//     // Verificar si ya existe un registro con esa fecha
-//     const fechaYaExiste = registros.some(r => r.fecha === fecha);
-//     if (fechaYaExiste) {
-//         mostrarModalAlerta("Ya existe un registro con esa fecha.");
-//         return; // No agregues el registro
-//     }
-
-//     // Quitar la fila de edición
-//     registros = registros.filter(r => !r.editando);
-
-//     // Agregar el nuevo registro
-//     registros.push({ valor: valor, fecha: fecha });
-//     guardarEnLocalStorage();
-
-//     // Limpia filtros antes de renderizar
-//     filtroDesde = null;
-//     filtroHasta = null;
-//     filtroMes = null;
-
-//     renderTabla();
-// }
+// Editar con supabase
 
 function editarCelda(index, campo, celda) {
     const valorActual = registros[index][campo];
     const input = document.createElement('input');
 
-    input.type = campo === 'valor' ? 'text' : 'date'; 
+    input.type = campo === 'valor' ? 'text' : 'date';
     input.value = campo === 'valor'
         ? Number(valorActual).toLocaleString('es-CO')
         : valorActual;
@@ -186,21 +152,39 @@ function editarCelda(index, campo, celda) {
 
     input.addEventListener('input', () => {
         if (campo === 'valor') {
-            // Quitar todo lo que no sea dígito
             const limpio = input.value.replace(/\D/g, '');
-            // Reaplicar formato
             input.value = Number(limpio).toLocaleString('es-CO');
         }
     });
 
-    input.addEventListener('blur', () => {
+    input.addEventListener('blur', async () => {
+        let nuevoValor;
         if (campo === 'valor') {
-            const limpio = input.value.replace(/\D/g, '');
-            registros[index][campo] = limpio;
+            nuevoValor = input.value.replace(/\D/g, '');
         } else {
-            registros[index][campo] = input.value;
+            nuevoValor = input.value;
         }
-        guardarEnLocalStorage();
+
+        // Actualiza localmente
+        registros[index][campo] = nuevoValor;
+
+        // Actualiza en Supabase
+        try {
+            const { error } = await supabase
+                .from('registros')
+                .update({ [campo]: nuevoValor })
+                .eq('id', registros[index].id);
+
+            if (error) {
+                console.error('❌ Error al actualizar en Supabase:', error);
+                mostrarModalAlerta('Error al actualizar en Supabase.');
+            }
+        } catch (e) {
+            console.error('🚨 Excepción al actualizar en Supabase:', e);
+            mostrarModalAlerta('Error inesperado al actualizar.');
+        }
+
+        guardarEnLocalStorage(); // Opcional, si aún lo usas
         renderTabla();
     });
 
@@ -218,6 +202,70 @@ function editarCelda(index, campo, celda) {
         if (campo === 'fecha') input.showPicker?.();
     }, 0);
 }
+
+// function editarCelda(index, campo, celda) {
+//     const valorActual = registros[index][campo];
+//     const input = document.createElement('input');
+
+//     input.type = campo === 'valor' ? 'text' : 'date';
+//     input.value = campo === 'valor'
+//         ? Number(valorActual).toLocaleString('es-CO')
+//         : valorActual;
+
+//     input.style.width = '90%';
+
+//     input.addEventListener('input', () => {
+//         if (campo === 'valor') {
+//             const limpio = input.value.replace(/\D/g, '');
+//             input.value = Number(limpio).toLocaleString('es-CO');
+//         }
+//     });
+
+//     input.addEventListener('blur', async () => {
+//         let nuevoValor;
+//         if (campo === 'valor') {
+//             nuevoValor = input.value.replace(/\D/g, '');
+//         } else {
+//             nuevoValor = input.value;
+//         }
+
+//         // Actualiza localmente
+//         registros[index][campo] = nuevoValor;
+
+//         // Actualiza en Supabase
+//         try {
+//             const { error } = await supabase
+//                 .from('registros')
+//                 .update({ [campo]: nuevoValor })
+//                 .eq('id', registros[index].id);
+
+//             if (error) {
+//                 console.error('❌ Error al actualizar en Supabase:', error);
+//                 mostrarModalAlerta('Error al actualizar en Supabase.');
+//             }
+//         } catch (e) {
+//             console.error('🚨 Excepción al actualizar en Supabase:', e);
+//             mostrarModalAlerta('Error inesperado al actualizar.');
+//         }
+
+//         guardarEnLocalStorage(); // Opcional, si aún lo usas
+//         renderTabla();
+//     });
+
+//     input.addEventListener('keydown', (e) => {
+//         if (e.key === 'Enter') {
+//             input.blur();
+//         }
+//     });
+
+//     celda.innerHTML = '';
+//     celda.appendChild(input);
+
+//     setTimeout(() => {
+//         input.focus();
+//         if (campo === 'fecha') input.showPicker?.();
+//     }, 0);
+// }
 
 function guardarEnLocalStorage() {
     const registrosFiltrados = registros.filter(r => !r.editando);
@@ -392,20 +440,21 @@ async function guardarFila() {
 }
 
 async function eliminarFila(index) {
-    const id = registros[index].id;
+  const id = registros[index].id;
 
-    const { error } = await supabase
-        .from('registros')
-        .delete()
-        .eq('id', id);
+  const { error } = await supabase
+    .from('registros')
+    .delete()
+    .eq('id', id);
 
-    if (error) {
-        console.error('Error al eliminar:', error);
-        return;
-    }
+  if (error) {
+    console.error('❌ Error al eliminar en Supabase:', error);
+    mostrarModalAlerta("Error al eliminar en Supabase.");
+    return;
+  }
 
-    registros.splice(index, 1);
-    renderTabla();
+  registros.splice(index, 1);
+  renderTabla();
 }
 
 async function cargarDesdeSupabase() {
