@@ -376,14 +376,22 @@ async function cargarDesdeSupabase() {
 async function guardarEnSupabase(valor, fecha) {
     const { data, error } = await supabase
         .from('registros')
-        .insert([{ valor: parseInt(valor), fecha }]);
+        .insert([{ valor: parseInt(valor), fecha }])
+        .select(); // 👈 asegúrate de incluir esto
 
     if (error) {
         console.error("Error al guardar registro:", error);
         return;
     }
 
-    registros.push(data[0]); // Añadir el nuevo registro al arreglo local
+    if (data && data.length > 0) {
+        registros.push(data[0]); // Solo si hay datos
+    } else {
+        console.warn("No se devolvieron datos después del insert.");
+        // Opcional: puedes hacer un reload completo desde Supabase si lo prefieres:
+        await cargarDesdeSupabase();
+    }
+
     renderTabla();
 }
 
